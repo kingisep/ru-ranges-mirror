@@ -1,0 +1,49 @@
+name: Mirror RU ranges
+ 
+on:
+  schedule:
+    - cron: "17 4 * * *"   # daily, 04:17 UTC
+  workflow_dispatch: {}     # lets you run it by hand from the Actions tab
+ 
+permissions:
+  contents: write
+ 
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    env:
+      SRC: https://github.com/timbrs/ru-ranges/releases/download/latest/ru_ranges.rsc
+    steps:
+      - uses: actions/checkout@v4
+ 
+      - name: Download and validate
+        run: |
+          set -euo pipefail
+          curl -fsSL --retry 3 --max-time 120 -o new.rsc "$SRC"
+ 
+          size=$(stat -c %s new.rsc)
+          [ "$size" -ge 400000 ] && [ "$size" -le 2000000 ] || { echo "bad size: $size"; exit 1; }
+ 
+          # Every line must be a plain address-list entry for list RU. Anything else fails the run.
+          pat='^/ip firewall address-list add list=RU address=[0-9]{1,3}(\.[0-9]{1,3}){3}/[0-9]{1,2} comment=RIPE-RU$'
+          bad=$(grep -vcE "$pat" new.rsc || true)
+          [ "$bad" -eq 0 ] || { echo "$bad unexpected lines:"; grep -vE "$pat" new.rsc | head -20; exit 1; }
+ 
+          count=$(wc -l < new.rsc)
+          [ "$count" -ge 1000 ] || { echo "too few entries: $count"; exit 1; }
+ 
+          mv new.rsc ru_ranges.rsc
+ 
+      - name: Commit if changed
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- ru_ranges.rsc; then
+            echo "No changes."
+            exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add ru_ranges.rsc
+          git commit -m "Update ru_ranges.rsc ($(date -u +%F))"
+          git push
+ 
