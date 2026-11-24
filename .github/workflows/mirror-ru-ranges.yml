@@ -37,13 +37,13 @@ jobs:
       - name: Commit if changed
         run: |
           set -euo pipefail
-          if git diff --quiet -- ru_ranges.rsc; then
+          git add ru_ranges.rsc
+          if git diff --cached --quiet; then
             echo "No changes."
             exit 0
           fi
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add ru_ranges.rsc
           git commit -m "Update ru_ranges.rsc ($(date -u +%F))"
           git push
  
