@@ -2,7 +2,9 @@ name: Mirror RU ranges
  
 on:
   schedule:
-    - cron: "30 1 * * *"   # daily, 01:30 UTC = 02:30 Madrid in winter, 03:30 in summer
+    - cron: "30 0 * * *"
+    - cron: "30 1 * * *"
+    - cron: "30 2 * * *"
   workflow_dispatch: {}     # lets you run it by hand from the Actions tab
  
 permissions:
