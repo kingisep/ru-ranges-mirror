@@ -16,7 +16,7 @@ jobs:
     env:
       SRC: https://github.com/timbrs/ru-ranges/releases/download/latest/ru_ranges.rsc
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
  
       - name: Download and validate
         run: |
