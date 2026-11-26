@@ -6150,7 +6150,8 @@
 /ip firewall address-list add list=RU address=159.194.200.0/21 comment=RIPE-RU
 /ip firewall address-list add list=RU address=159.194.208.0/20 comment=RIPE-RU
 /ip firewall address-list add list=RU address=159.194.224.0/19 comment=RIPE-RU
-/ip firewall address-list add list=RU address=159.200.80.0/20 comment=RIPE-RU
+/ip firewall address-list add list=RU address=159.200.80.0/21 comment=RIPE-RU
+/ip firewall address-list add list=RU address=159.200.88.0/21 comment=RIPE-RU
 /ip firewall address-list add list=RU address=159.200.128.0/18 comment=RIPE-RU
 /ip firewall address-list add list=RU address=159.200.200.0/24 comment=RIPE-RU
 /ip firewall address-list add list=RU address=159.200.201.0/24 comment=RIPE-RU
